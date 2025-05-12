@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class DoorManager : MonoBehaviour
 {
     // Start is called before the first frame update
+    public int nilai;
     public Animator doorAnimator;
     public Animator doorAnimator2;
     public Animator doorAnimator3;
