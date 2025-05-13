@@ -4,6 +4,8 @@ using UnityEngine;
 using Ink.Runtime;
 using System;
 using UnityEngine.UI;
+using TMPro;
+using System.Linq;
 
 public class DialogSystem : MonoBehaviour
 {
@@ -14,10 +16,13 @@ public class DialogSystem : MonoBehaviour
     public GameObject canvas;
     public GameObject box;
 
+    public int count;
+    public static int nilai;
+
     [SerializeField] private GameObject textBox;
     [SerializeField] private GameObject choiceBox;
-    [SerializeField] private Text textPrefab = null;
-    [SerializeField] private Button buttonPrefab = null;
+    [SerializeField] private TMP_Text textPrefab;
+    [SerializeField] private Button buttonPrefab;
 
     void Awake()
     {
@@ -31,6 +36,7 @@ public class DialogSystem : MonoBehaviour
         {
             story = new Story(inkJson.text);
             OnStoryCreated?.Invoke(story);
+            RefreshView();
         }
         else
         {
@@ -53,45 +59,66 @@ public class DialogSystem : MonoBehaviour
     void OnClickChoice(Choice choice)
     {
         story.ChooseChoiceIndex(choice.index);
-
+        RefreshView();
     }
 
     void RefreshView()
     {
         RemoveChildren();
 
-        if (story.canContinue)
+        // Tampilkan text saat ini
+        while (story.canContinue)
         {
             string text = story.Continue();
-            Text newText = Instantiate(textPrefab, textBox.transform);
-            newText.text = text;
+            text = text.Trim();
+            CreateContentView(text);
         }
 
+        // Tampilkan pilihan yang tersedia
         if (story.currentChoices.Count > 0)
         {
+            count = story.currentChoices.Count;
+            Debug.Log("Choices available: " + count);
             foreach (Choice choice in story.currentChoices)
             {
-                Button newButton = Instantiate(buttonPrefab, choiceBox.transform);
-                newButton.GetComponentInChildren<Text>().text = choice.text;
-                newButton.onClick.AddListener(() => OnClickChoice(choice));
+                Button newButton = CreateButtonView(choice.text);
+                newButton.onClick.AddListener(delegate
+                {
+                    OnClickChoice(choice);
+                });
             }
         }
-        else
+        else if (story.canContinue) // Tambahkan pengecekan untuk continue
         {
-            canvas.SetActive(false);
-            box.SetActive(false);
+
+            RefreshView();
+
         }
+        else // Hanya tampilkan close dialog ketika cerita benar-benar selesai
+        {
+            Button closeButton = CreateButtonView("Close");
+            closeButton.onClick.AddListener(delegate
+            {
+                canvas.SetActive(false);
+                box.SetActive(false);
+                this.gameObject.SetActive(false);
+            });
+        }
+
+        nilai = story.variablesState.Contains("nilai") ? Convert.ToInt32(story.variablesState["nilai"]) : 0;
     }
 
-    void CreateContentView(string text){
-        Text newText = Instantiate(textPrefab) as Text;
+    void CreateContentView(string text)
+    {
+        TMP_Text newText = Instantiate(textPrefab) as TMP_Text;
         newText.text = text;
         newText.transform.SetParent(textBox.transform, false);
     }
 
-    Button CreateButtonView(string text){
+    Button CreateButtonView(string text)
+    {
         Button newButton = Instantiate(buttonPrefab) as Button;
-        newButton.GetComponentInChildren<Text>().text = text;
+        newButton.GetComponentInChildren<TMP_Text>().text = text;
         newButton.transform.SetParent(choiceBox.transform, false);
         return newButton;
     }

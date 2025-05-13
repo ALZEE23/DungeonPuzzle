@@ -18,42 +18,56 @@ public class DoorManager : MonoBehaviour
     public bool key1;
     public bool key2;
     public bool key3;
+
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (DialogSystem.nilai == 3)
+        {
+
+            key1 = true;
+        }
+        else if (DialogSystem.nilai == 6)
+        {
+            key2 = true;
+        }
+        else if (DialogSystem.nilai == 7)
+        {
+            key3 = true;
+        }
+        OpenDoor();
     }
 
     public void OpenDoor()
     {
-        switch (gameObject.name)
+        // Check Door 1
+        if (key1 && doorAnimator != null)
         {
-            case "Door1":
-                if (key1)
-                {
-                    doorAnimator.SetTrigger("Open");
-                    doorObstacle.enabled = false;
-                }
-                break;
-            case "Door2":
-                if (key2)
-                {
-                    doorAnimator2.SetTrigger("Open");
-                    doorObstacle2.enabled = false;
-                }
-                break;
-            case "Door3":
-                if (key3)
-                {
-                    doorAnimator3.SetTrigger("Open");
-                    doorObstacle3.enabled = false;
-                }
-                break;
+            doorAnimator.SetTrigger("open");
+            if (doorObstacle != null)
+                doorObstacle.enabled = false;
+        }
+
+        // Check Door 2
+        if (key2 && doorAnimator2 != null)
+        {
+            doorAnimator2.SetTrigger("open");
+            if (doorObstacle2 != null)
+                doorObstacle2.enabled = false;
+        }
+
+        // Check Door 3
+        if (key3 && doorAnimator3 != null)
+        {
+            doorAnimator3.SetTrigger("open");
+            if (doorObstacle3 != null)
+                doorObstacle3.enabled = false;
         }
     }
 }
