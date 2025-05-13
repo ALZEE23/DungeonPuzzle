@@ -18,6 +18,8 @@ public class DialogSystem : MonoBehaviour
 
     public int count;
     public static int nilai;
+    public static int nilai1;
+    public static int nilai2;
 
     [SerializeField] private GameObject textBox;
     [SerializeField] private GameObject choiceBox;
@@ -66,7 +68,7 @@ public class DialogSystem : MonoBehaviour
     {
         RemoveChildren();
 
-        // Tampilkan text saat ini
+
         while (story.canContinue)
         {
             string text = story.Continue();
@@ -74,7 +76,7 @@ public class DialogSystem : MonoBehaviour
             CreateContentView(text);
         }
 
-        // Tampilkan pilihan yang tersedia
+
         if (story.currentChoices.Count > 0)
         {
             count = story.currentChoices.Count;
@@ -88,24 +90,41 @@ public class DialogSystem : MonoBehaviour
                 });
             }
         }
-        else if (story.canContinue) // Tambahkan pengecekan untuk continue
+        else if (story.canContinue)
         {
 
             RefreshView();
 
         }
-        else // Hanya tampilkan close dialog ketika cerita benar-benar selesai
+        else
         {
             Button closeButton = CreateButtonView("Close");
             closeButton.onClick.AddListener(delegate
             {
                 canvas.SetActive(false);
-                box.SetActive(false);
+                // box.SetActive(false);
                 this.gameObject.SetActive(false);
             });
         }
 
-        nilai = story.variablesState.Contains("nilai") ? Convert.ToInt32(story.variablesState["nilai"]) : 0;
+        if (story.variablesState.Contains("nilai"))
+        {
+            nilai = story.variablesState.Contains("nilai") ? Convert.ToInt32(story.variablesState["nilai"]) : 0;
+            Debug.Log("nilai: " + nilai);
+        }
+
+        if (story.variablesState.Contains("nilai1"))
+        {
+            nilai1 = story.variablesState.Contains("nilai1") ? Convert.ToInt32(story.variablesState["nilai1"]) : 0;
+            Debug.Log("nilai1: " + nilai1);
+        }
+
+        if (story.variablesState.Contains("nilai2"))
+        {
+            nilai2 = story.variablesState.Contains("nilai2") ? Convert.ToInt32(story.variablesState["nilai2"]) : 0;
+            Debug.Log("nilai2: " + nilai2);
+        }
+
     }
 
     void CreateContentView(string text)

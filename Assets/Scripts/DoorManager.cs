@@ -33,11 +33,13 @@ public class DoorManager : MonoBehaviour
 
             key1 = true;
         }
-        else if (DialogSystem.nilai == 6)
+
+        if (DialogSystem.nilai1 == 3)
         {
             key2 = true;
         }
-        else if (DialogSystem.nilai == 7)
+
+        if (DialogSystem.nilai2 == 2)
         {
             key3 = true;
         }
