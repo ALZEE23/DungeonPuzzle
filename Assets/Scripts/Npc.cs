@@ -18,6 +18,15 @@ public class Npc : MonoBehaviour
        if (other.CompareTag("Player"))
         {
             dialogBox.SetActive(true);
+            DialogSystem dialogSystem = FindObjectOfType<DialogSystem>();
+            if (dialogSystem != null)
+            {
+                dialogSystem.StartStory();
+            }
+            else
+            {
+                Debug.LogError("DialogSystem not found in the scene.");
+            }
         }
     }
 }

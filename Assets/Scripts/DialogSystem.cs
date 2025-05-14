@@ -32,7 +32,7 @@ public class DialogSystem : MonoBehaviour
         StartStory();
     }
 
-    void StartStory()
+    public void StartStory()
     {
         if (inkJson != null)
         {
@@ -104,6 +104,8 @@ public class DialogSystem : MonoBehaviour
                 canvas.SetActive(false);
                 // box.SetActive(false);
                 this.gameObject.SetActive(false);
+                story = new Story(inkJson.text);
+                OnStoryCreated?.Invoke(story);
             });
         }
 
